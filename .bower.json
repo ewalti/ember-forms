@@ -1,0 +1,14 @@
+{
+  "name": "ember-easyform",
+  "_cacheHeaders": {
+    "ETag": "\"2081ce0486a41f10948c20fc9b0f8059\"",
+    "Last-Modified": "Thu, 22 May 2014 22:36:21 GMT",
+    "Content-Length": "22767",
+    "Content-Type": "text/javascript"
+  },
+  "_release": "e-tag:2081ce048",
+  "main": "index.js",
+  "_source": "http://builds.dockyard.com.s3.amazonaws.com/ember-easyForm/ember-easyForm-latest.js",
+  "_target": "*",
+  "_originalSource": "http://builds.dockyard.com.s3.amazonaws.com/ember-easyForm/ember-easyForm-latest.js"
+}
