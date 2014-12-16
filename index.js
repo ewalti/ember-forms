@@ -572,14 +572,43 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 
 
 (function() {
-Ember.EasyForm.TextArea = Ember.TextArea.extend();
+Ember.EasyForm.TextArea = Ember.TextArea.extend({
+  didInsertElement: function() {
+    var count = this.get('count');
+    if(count) {
+      this.$().after($('<span>', {class: 'count-box textarea', text: count}));
+    }
+  },
+  textCount: function() {
+    var count = this.get('count');
+    if(count) {
+      var delta = count - this.get('value').length;
+      this.$().siblings('.count-box').text(delta);
+    }
+  }.observes('value')
+});
 
 })();
 
 
 
 (function() {
-Ember.EasyForm.TextField = Ember.TextField.extend();
+Ember.EasyForm.TextField = Ember.TextField.extend({
+  didInsertElement: function() {
+    console.log('textFied');
+    var count = this.get('count');
+    if(count) {
+      this.$().after($('<span>', {class: 'count-box', text: count}));
+    }
+  },
+  textCount: function() {
+    var count = this.get('count');
+    if(count) {
+      var delta = count - this.get('value').length;
+      this.$().siblings('.count-box').text(delta);
+    }
+  }.observes('value')
+});
 
 })();
 
