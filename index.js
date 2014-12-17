@@ -569,56 +569,43 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 
 })();
 
-
-
-(function() {
-Ember.EasyForm.TextArea = Ember.TextArea.extend({
-  didInsertElement: function() {
-    var count = this.get('count');
-    if(count) {
-      this.$().after($('<span>', {class: 'count-box textarea', text: count}));
-    }
-  },
-  textCount: function() {
-    var count = this.get('count');
-    if(count) {
-      var delta = count - this.get('value').length;
-      this.$().siblings('.count-box').text(delta);
-    }
-  }.observes('value')
-});
-
+(function(){
+  Ember.EasyForm.CounterMixin = Ember.Mixin.create({
+    didInsertElement: function() {
+      var count = this.get('count');
+      if(count) {
+        var delta = this.get('delta') ? this.get('delta') : count;
+        var countClass = this.get('countClass') ? this.get('countClass') : 'count-box';
+        this.$().after($('<span>', {class: countClass, text: delta}));
+      }
+    },
+    textCount: function() {
+      var count = this.get('count');
+      if(count) {
+        var delta = count - this.get('value').length;
+        this.$().siblings('.count-box').text(delta);
+      }
+    }.observes('value'),
+    setupCount: function() {
+      var count = this.get('count');
+      if(count) {
+        var delta = count - this.get('value').length;
+        this.set('delta', delta);
+      }
+    }.on('init')
+  });
 })();
 
 
-
 (function() {
-Ember.EasyForm.TextField = Ember.TextField.extend({
-  didInsertElement: function() {
-    console.log('textFied');
-    var count = this.get('count');
-    if(count) {
-      this.$().after($('<span>', {class: 'count-box', text: count}));
-    }
-  },
-  textCount: function() {
-    var count = this.get('count');
-    if(count) {
-      var delta = count - this.get('value').length;
-      this.$().siblings('.count-box').text(delta);
-    }
-  }.observes('value')
-});
-
+  Ember.EasyForm.TextArea = Ember.TextArea.extend(Ember.EasyForm.CounterMixin,{
+    countClass: 'count-box textarea'
+  });
 })();
 
-
-
 (function() {
-
+  Ember.EasyForm.TextField = Ember.TextField.extend(Ember.EasyForm.CounterMixin,{});
 })();
-
-
 
 (function() {
 Ember.EasyForm.Config.registerTemplate('easyForm/error', Ember.Handlebars.template(function anonymous(Handlebars,depth0,helpers,partials,data) {
