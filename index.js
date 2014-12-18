@@ -589,7 +589,8 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
     setupCount: function() {
       var count = this.get('count');
       if(count) {
-        var delta = count - this.get('value').length;
+        var value = this.get('value') ? this.get('value').length : 0,
+            delta = count - value;
         this.set('delta', delta);
       }
     }.on('init')
