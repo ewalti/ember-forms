@@ -179,7 +179,9 @@ Ember.Handlebars.registerHelper('input-field', function(property, options) {
     delete options.hash.inputOptions;
   }
 
-  if (options.hash.as === 'text') {
+  if(options.hash.as === 'slug') {
+    return Ember.Handlebars.helpers.view.call(context, Ember.EasyForm.SlugField, options);
+  } else if (options.hash.as === 'text') {
     return Ember.Handlebars.helpers.view.call(context, Ember.EasyForm.TextArea, options);
   } else if (options.hash.as === 'select') {
     delete(options.hash.valueBinding);
@@ -330,19 +332,11 @@ Ember.EasyForm.Error = Ember.EasyForm.BaseView.extend({
     if(this.property.split('.').length == 2) {
       this.property = this.property.split('.')[1];
     }
-
     var binding = 'controller.errors.';
-    // var binding;
-    // if(this.get('controller.parentController')) {
-    //   binding = 'controller.errors.';
-    // } else {
-    //   binding = 'formForModel.errors.';
-    // }
-
     Ember.Binding.from(binding + this.property).to('errors').connect(this);
   },
   templateName: Ember.computed.oneWay('wrapperConfig.errorTemplate'),
-  errorText: Ember.computed.oneWay('errors.firstObject')
+  errorText: Ember.computed.oneWay('errors.firstObject.message')
 });
 
 })();
@@ -606,6 +600,55 @@ helpers = this.merge(helpers, Ember.Handlebars.helpers); data = data || {};
 
 (function() {
   Ember.EasyForm.TextField = Ember.TextField.extend(Ember.EasyForm.CounterMixin,{});
+})();
+
+(function() {
+  Ember.EasyForm.SlugField = Ember.TextField.extend(Ember.EasyForm.CounterMixin,{
+    NON_WORD_PATTERN: /[^\x20\x2D0-9A-Z\x5Fa-z\xC0-\xD6\xD8-\xF6\xF8-\xFF]/g,
+    removeNonWord: function (str) {
+      str = str.toString();
+      return str.replace(this.NON_WORD_PATTERN, '');
+    },
+    replaceAccents: function(str) {
+      str = str.toString();
+      // verifies if the String has accents and replace them
+      if (str.search(/[\xC0-\xFF]/g) > -1) {
+        str = str
+                .replace(/[\xC0-\xC5]/g, "A")
+                .replace(/[\xC6]/g, "AE")
+                .replace(/[\xC7]/g, "C")
+                .replace(/[\xC8-\xCB]/g, "E")
+                .replace(/[\xCC-\xCF]/g, "I")
+                .replace(/[\xD0]/g, "D")
+                .replace(/[\xD1]/g, "N")
+                .replace(/[\xD2-\xD6\xD8]/g, "O")
+                .replace(/[\xD9-\xDC]/g, "U")
+                .replace(/[\xDD]/g, "Y")
+                .replace(/[\xDE]/g, "P")
+                .replace(/[\xE0-\xE5]/g, "a")
+                .replace(/[\xE6]/g, "ae")
+                .replace(/[\xE7]/g, "c")
+                .replace(/[\xE8-\xEB]/g, "e")
+                .replace(/[\xEC-\xEF]/g, "i")
+                .replace(/[\xF1]/g, "n")
+                .replace(/[\xF2-\xF6\xF8]/g, "o")
+                .replace(/[\xF9-\xFC]/g, "u")
+                .replace(/[\xFE]/g, "p")
+                .replace(/[\xFD\xFF]/g, "y");
+        }
+      return str;
+    },
+    generateInlineSlug: function(slug) {
+      var str = slug.toString();
+      str = this.replaceAccents(str);
+      str = this.removeNonWord(str);
+      return Ember.String.dasherize(str);
+    },
+    keyUp: function(e) {
+      var str = this.get('value');
+      this.set('value', this.generateInlineSlug(str));
+    }
+  });
 })();
 
 (function() {

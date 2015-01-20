@@ -6,9 +6,15 @@
     "Content-Length": "22767",
     "Content-Type": "text/javascript"
   },
-  "_release": "e-tag:2081ce048",
+  "_release": "19ad85ddd3",
   "main": "index.js",
-  "_source": "http://builds.dockyard.com.s3.amazonaws.com/ember-easyForm/ember-easyForm-latest.js",
+  "_source": "git@github.com:ewalti/ember-forms.git",
   "_target": "*",
-  "_originalSource": "http://builds.dockyard.com.s3.amazonaws.com/ember-easyForm/ember-easyForm-latest.js"
+  "_originalSource": "git@github.com:ewalti/ember-forms.git",
+  "homepage": "https://github.com/ewalti/ember-forms",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "19ad85ddd3493a8843ee46ae2e4974cace03c969"
+  }
 }
